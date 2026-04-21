@@ -10,6 +10,7 @@ updating this file and messaging the team.
 
 ## Directory layout
 - Components: `app/components/` (shared) and `app/<route>/_components/` (route-scoped)
+- Root-route exception: the home page lives at `app/page.tsx` with no route directory, so its components live under `app/_components/<topic>/` (e.g. `app/_components/home/Hero.tsx`)
 - Pages: `app/<route>/page.tsx` (default export only)
 - Configuration: `app/config/site.config.ts`
 - Content (copy, data): `app/content/<topic>.ts`
