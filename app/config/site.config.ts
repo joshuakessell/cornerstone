@@ -17,8 +17,7 @@ export interface SiteConfig {
   address: SiteAddress;
 }
 
-const defaultPaymentUrl =
-  process.env.NEXT_PUBLIC_PAYMENT_URL ?? "https://pay.example.com/cornerstone";
+const defaultPaymentUrl = process.env.NEXT_PUBLIC_PAYMENT_URL ?? "#";
 
 export const siteConfig: SiteConfig = {
   firmName: "Cornerstone Law Group",

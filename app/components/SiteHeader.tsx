@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/app/config/site.config";
+import { PrimaryNav } from "./PrimaryNav";
 
 export function SiteHeader() {
   return (
@@ -14,20 +15,7 @@ export function SiteHeader() {
         >
           {siteConfig.firmName}
         </Link>
-        <nav aria-label="Primary">
-          <ul className="flex items-center gap-6">
-            {siteConfig.navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="text-sm font-medium text-brand-navy-700 hover:text-brand-gold-700"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <PrimaryNav links={siteConfig.navLinks} />
       </div>
     </header>
   );

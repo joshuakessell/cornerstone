@@ -13,7 +13,7 @@ describe("siteConfig contract", () => {
       "our services",
       "contact",
     ]);
-    expect(siteConfig.paymentUrl).toMatch(/^https?:\/\//);
+    expect(siteConfig.paymentUrl).toMatch(/^https?:\/\/|^#$/);
     expect(siteConfig.phone).toMatch(/\d/);
     expect(siteConfig.email).toMatch(/@/);
     expect(siteConfig.address.line1).toMatch(/\w+/);
