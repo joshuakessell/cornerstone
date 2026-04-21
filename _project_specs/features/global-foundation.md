@@ -6,7 +6,7 @@
 Establish the design system and shared shell that every page depends on: Tailwind theme tokens for the new yellow/gold + navy palette, a typography scale, and shared `<SiteHeader>`, `<SiteFooter>`, and `<PageShell>` components. Also wire up the test infrastructure (Vitest + Testing Library + axe + Playwright) that every other feature will use.
 
 ## Acceptance Criteria
-1. Tailwind config exposes brand color tokens: `brand-navy-{50..900}` and `brand-gold-{50..900}` (at least 50/100/500/700/900 steps each), replacing any peach/coral references.
+1. Tailwind 4 `@theme` block in `app/globals.css` exposes brand color tokens: `--color-brand-navy-{50,100,500,700,900}` and `--color-brand-gold-{50,100,500,700,900}` (at least 5 steps each). These generate Tailwind utility classes like `text-brand-navy-700`, `bg-brand-gold-500`, etc. No peach/coral tokens anywhere. (This project uses Tailwind 4 CSS-first config — there is no `tailwind.config.ts`.)
 2. Brand text tokens (`text-brand-navy`, `text-brand-gold`) and bg tokens (`bg-brand-navy`, `bg-brand-gold`) resolve to values where the 500 step has WCAG AA contrast (≥ 4.5:1) against `white` for gold-on-white is **not** required — but navy-on-white MUST pass AA; gold is used as accent only and must have tooltip/test comment documenting non-text use.
 3. A typography scale is defined via `@layer base` with `h1..h6` default sizes that follow a modular scale (ratio ≥ 1.2). Body copy has `text-justify` as the default prose style via a `.prose-body` utility.
 4. Main menu link font size is explicitly one step smaller than body (e.g., `text-sm` if body is `text-base`). Test asserts `font-size` computed value.
@@ -20,9 +20,9 @@ Establish the design system and shared shell that every page depends on: Tailwin
 ## Test Cases
 | ID | Test | Type | Assertion |
 |----|------|------|-----------|
-| GF-1 | Tailwind exposes brand palette | unit | `tailwind.config.ts` exports include `brand-navy` and `brand-gold` color scales with ≥ 5 steps each |
-| GF-2 | navy-on-white contrast | unit | Contrast ratio of `brand-navy-700` vs `#ffffff` ≥ 4.5:1 (computed from hex) |
-| GF-3 | No peach/coral tokens | unit | Grep assertion: no `peach`, `coral`, `#f8d7c` patterns in `tailwind.config.ts` or `globals.css` |
+| GF-1 | Tailwind 4 `@theme` exposes brand palette | unit | `app/globals.css` `@theme` block declares `--color-brand-navy-{50,100,500,700,900}` and `--color-brand-gold-{50,100,500,700,900}` |
+| GF-2 | navy-on-white contrast | unit | Contrast ratio of `--color-brand-navy-700` vs `#ffffff` ≥ 4.5:1 (computed from hex) |
+| GF-3 | No peach/coral tokens | unit | Grep assertion: no `peach`, `coral`, `#f8d7c` patterns in `app/globals.css` or any config file |
 | GF-4 | Typography scale | unit | Rendered `<h1>` computed font-size > `<h2>` > `<h3>` > body |
 | GF-5 | Body text justified | unit | `.prose-body p` computed `text-align` === `"justify"` |
 | GF-6 | Menu font size smaller than body | unit | `<SiteHeader> a` computed `font-size` < body computed `font-size` |
@@ -36,7 +36,7 @@ Establish the design system and shared shell that every page depends on: Tailwin
 | GF-14 | Lighthouse a11y ≥ 95 | e2e | `lhci autorun` gate on `/` for `accessibility ≥ 0.95` |
 
 ## Placeholder / Content Split
-- Firm name string, nav labels, footer address, payment URL → all driven by a `site.config.ts` with documented defaults. Real values can be swapped later without changing tests.
+- Firm name, nav labels, payment URL, phone, email, and address → all driven by a `site.config.ts` with documented defaults. Real values can be swapped later without changing tests. Full key schema: `firmName`, `navLinks`, `paymentUrl`, `phone`, `email`, `address`. contact-and-client-area criterion C5 consumes `phone`, `email`, and `address` from this module.
 - No real photographs required for this feature.
 
 ## Out of Scope
@@ -46,3 +46,45 @@ Establish the design system and shared shell that every page depends on: Tailwin
 
 ## Dependencies
 None. This is the root feature.
+
+## Implementation Plan
+
+### Tailwind 4 note
+This scaffold uses Tailwind 4 (CSS-first). There is **no `tailwind.config.ts`**. All color tokens, typography, and utility variables live inside the `@theme` block of `app/globals.css`. GF-1 / GF-3 tests target that file instead.
+
+### Component tree
+- `app/components/SiteHeader.tsx` — firm name + primary nav (no payment button)
+- `app/components/SiteFooter.tsx` — firm name, address placeholder, `© <year>`
+- `app/components/PageShell.tsx` — composition only: wraps `SiteHeader`, `{children}`, `SiteFooter`, and `PaymentButton`. Kept as a thin shell so it stays well under 200 lines (actual: ~22).
+- `app/components/PaymentButton.tsx` — extracted from `PageShell` per quality-agent recommendation (referred to as `PaymentCta` in the review note). `<a>` with `href={paymentUrl}`, `rel="noopener noreferrer"`, `target="_blank"`, `aria-label="Make a payment"`; wrapper carries `fixed bottom-6 right-6 z-50` and `data-testid="payment-button"`.
+
+### Site configuration
+- Location: `app/config/site.config.ts` (no `src/` dir in this scaffold)
+- Exports a typed `siteConfig` const:
+  ```ts
+  export interface SiteConfig {
+    firmName: string;
+    navLinks: ReadonlyArray<{ label: string; href: string }>;
+    paymentUrl: string;
+    phone: string;
+    email: string;
+    address: { line1: string; line2: string };
+  }
+  ```
+- `paymentUrl` defaults to `process.env.NEXT_PUBLIC_PAYMENT_URL ?? "https://pay.example.com"`.
+
+### Typography scale
+Inside `@layer base` in `globals.css`, set `h1..h6` font sizes using a modular scale with ratio ≈ 1.25. `.prose-body` utility sets `text-align: justify` and applies to body paragraphs.
+
+### Test infra (delivered under task #18)
+- `vitest.config.ts` — jsdom env, coverage provider v8, threshold ≥ 80%, `setupFiles: ["./vitest.setup.ts"]`
+- `vitest.setup.ts` — imports `@testing-library/jest-dom/vitest` + extends expect with `jest-axe`
+- `playwright.config.ts` — projects for mobile (390×844) and desktop (1280×800)
+
+### Test file layout
+- Colocated: `app/components/SiteHeader.test.tsx`, etc.
+- Tokens/typography tests at `app/globals.test.ts`
+- Playwright specs at `e2e/*.spec.ts`
+
+### Conventions published under task #19
+See `CONVENTIONS.md` at repo root.
