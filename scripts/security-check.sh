@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+echo "Running security checks..."
+
+if git diff --cached --name-only | grep -E '^\.env$|^\.env\.' | grep -v '\.example$'; then
+  echo "ERROR: .env file is staged for commit!"
+  exit 1
+fi
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+if [ -n "$STAGED_FILES" ]; then
+  if echo "$STAGED_FILES" | xargs grep -l -E '(password|secret|api_key|apikey|token)\s*[:=]\s*["\047][^"\047]{8,}["\047]' 2>/dev/null; then
+    echo "WARNING: Possible secrets found in staged files - please verify"
+  fi
+fi
+
+if [ -n "$STAGED_FILES" ]; then
+  if echo "$STAGED_FILES" | xargs grep -l -E 'VITE_.*SECRET|VITE_.*KEY.*=.*[a-zA-Z0-9]{20,}' 2>/dev/null; then
+    echo "ERROR: Secrets in VITE_* env vars are exposed to client!"
+    exit 1
+  fi
+fi
+
+if [ -f "package.json" ]; then
+  echo "Checking npm dependencies..."
+  npm audit --audit-level=high 2>/dev/null || echo "Warning: npm audit found issues"
+fi
+
+echo "Security checks complete!"

@@ -1,0 +1,42 @@
+# Environment files - NEVER commit
+.env
+.env.*
+!.env.example
+
+# Secrets
+*.pem
+*.key
+*.p12
+credentials.json
+secrets.json
+service-account*.json
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Code graph data (auto-generated, machine-specific)
+.code-graph/
+
+# Local settings
+.claude/settings.local.json
+
+# IDE
+.idea/
+.vscode/settings.json
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
