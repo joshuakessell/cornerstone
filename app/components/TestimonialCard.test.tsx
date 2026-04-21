@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
 import type { Testimonial } from "@/app/content/approach";
-import { TestimonialCard } from "@/app/our-approach/_components/TestimonialCard";
+import { TestimonialCard } from "@/app/components/TestimonialCard";
 
 const sample: Testimonial = {
   id: "jennifer",

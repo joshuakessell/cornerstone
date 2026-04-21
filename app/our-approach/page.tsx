@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageShell } from "@/app/components/PageShell";
 import { heroIntro, testimonials } from "@/app/content/approach";
-import { TestimonialCard } from "@/app/our-approach/_components/TestimonialCard";
+import { TestimonialCard } from "@/app/components/TestimonialCard";
 
 export const metadata: Metadata = {
   title: "Our Approach",
