@@ -28,6 +28,10 @@ export function ClioEmbed({ data }: ClioEmbedProps) {
     );
   }
 
+  // TODO(CSP): add `frame-src <clio-origin>` to a Content-Security-Policy
+  // header (middleware.ts or next.config.ts `headers()`) once the final
+  // NEXT_PUBLIC_CLIO_EMBED_URL is known. Until then the iframe is constrained
+  // by `sandbox` and `referrerPolicy` only — defense-in-depth is deferred.
   return (
     <div className={wrapperClass}>
       <iframe
