@@ -1,5 +1,8 @@
 # CLAUDE.md
 
+## Next.js Agent Rules
+**Read `AGENTS.md` first.** This Next.js version may differ from training data — consult `node_modules/next/dist/docs/` for API specifics before writing Next.js code.
+
 ## Skills
 Read and follow these skills before writing any code:
 - .claude/skills/base/SKILL.md
@@ -9,19 +12,19 @@ Read and follow these skills before writing any code:
 - .claude/skills/code-graph/SKILL.md
 - .claude/skills/typescript/SKILL.md
 - .claude/skills/react-web/SKILL.md
-- .claude/skills/llm-patterns/SKILL.md
+- .claude/skills/next-best-practices/SKILL.md
 - .claude/skills/agent-teams/SKILL.md
 
 ## Project Overview
-[Project description — fill in later]
+Front-end redesign of the **Cornerstone Law Group** website — a Dallas family-law firm marketing site. The redesign covers global palette (peach → yellow/gold + navy), typography, and a page-by-page refresh (Home, Our Team, Our Approach, Our Services, Contact). A dedicated **"Client Area"** page hosts an embedded **Clio** CRM intake widget (iframe/script embed — no custom intake forms). Full spec in `_project_specs/overview.md`.
 
 ## Tech Stack
 - Language: TypeScript
-- Framework: React + Vite
-- Database: None / SQLite (local)
+- Framework: Next.js (App Router) + React
+- Styling: Tailwind CSS
+- Database: None (Clio handles client intake + CRM)
 - Deployment: Vercel
-- AI: Anthropic SDK (AI-first app)
-- Testing: Vitest + React Testing Library (recommended; confirm when adding tests)
+- Testing: Vitest / Playwright (confirm when adding tests)
 
 ## Key Commands
 ```bash
@@ -31,15 +34,19 @@ Read and follow these skills before writing any code:
 # Install dependencies
 npm install
 
-# Dev server
+# Dev server (http://localhost:3000)
 npm run dev
 
-# Run tests
-npm test
+# Build & start
+npm run build
+npm start
 
 # Lint & type check
 npm run lint
-npm run typecheck
+npx tsc --noEmit
+
+# Run tests
+npm test
 
 # Pre-commit hooks (after clone)
 npx husky init

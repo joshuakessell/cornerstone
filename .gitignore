@@ -21,7 +21,27 @@ venv/
 # Build outputs
 dist/
 build/
-.vite/
+out/
+
+# Next.js
+.next/
+next-env.d.ts
+*.tsbuildinfo
+
+# Yarn PnP
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Coverage
+coverage/
+
+# Vercel
+.vercel
 
 # Code graph data (auto-generated, machine-specific)
 .code-graph/
