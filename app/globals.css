@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0b1220;
 }
 
 @theme inline {
@@ -10,17 +10,64 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-navy-50: #e6ebf2;
+  --color-brand-navy-100: #b8c4d8;
+  --color-brand-navy-500: #1a2a4a;
+  --color-brand-navy-700: #0f1b33;
+  --color-brand-navy-900: #060c1a;
+
+  --color-brand-gold-50: #fff8e1;
+  --color-brand-gold-100: #ffecb3;
+  --color-brand-gold-500: #e0a82e;
+  --color-brand-gold-700: #a97a12;
+  --color-brand-gold-900: #6b4c00;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@layer base {
+  h1 {
+    font-size: 2.441rem;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+  h2 {
+    font-size: 1.953rem;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  h3 {
+    font-size: 1.563rem;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  h4 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  h5 {
+    font-size: 1.125rem;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+  h6 {
+    font-size: 1rem;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  .prose-body p {
+    text-align: justify;
+    hyphens: auto;
+  }
 }
