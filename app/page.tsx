@@ -1,14 +1,21 @@
-export default function Home() {
+import type { Metadata } from "next";
+import { PageShell } from "@/app/components/PageShell";
+import { Hero } from "@/app/_components/home/Hero";
+import { Intro } from "@/app/_components/home/Intro";
+
+export const metadata: Metadata = {
+  title: { absolute: "Cornerstone Law Group" },
+  description:
+    "Cornerstone Law Group is a Dallas family-law firm representing clients through divorce, custody, and adoption with clarity and care.",
+};
+
+export default function HomePage() {
   return (
-    <main className="flex flex-1 items-center justify-center px-6 py-24">
-      <div className="max-w-xl text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
-          Cornerstone Law Group
-        </h1>
-        <p className="mt-4 text-zinc-600">
-          Site redesign underway. Content and pages are in active development.
-        </p>
-      </div>
-    </main>
+    <PageShell>
+      <main>
+        <Hero />
+        <Intro />
+      </main>
+    </PageShell>
   );
 }
