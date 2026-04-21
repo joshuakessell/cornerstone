@@ -19,7 +19,6 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-      all: false,
       include: [
         "app/components/**/*.{ts,tsx}",
         "app/config/**/*.{ts,tsx}",
